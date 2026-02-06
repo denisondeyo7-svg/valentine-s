@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentines | Forever</title>
+    <style>
+        :root {
+            --primary-red: #c63d3d;
+            --bg-pink: #fdf2f2;
+            --sidebar-red: #d64545;
+            --white: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg-pink);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: row;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* --- SIDEBAR / NAV --- */
+        .sidebar {
+            width: 250px;
+            background: var(--sidebar-red);
+            height: 100vh;
+            position: fixed;
+            color: white;
+            padding: 20px;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar h2 { 
+            font-size: 28px; 
+            margin-bottom: 30px; 
+            line-height: 1.2;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .sidebar a {
+            display: block;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            padding: 15px 10px;
+            font-size: 1.1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .sidebar a:hover { 
+            color: white; 
+            background: rgba(255,255,255,0.1); 
+            padding-left: 20px; 
+        }
+
+        /* --- MAIN CONTENT --- */
+        .main {
+            margin-left: 280px; /* Space for sidebar */
+            padding: 40px;
+            width: 100%;
+            transition: margin 0.3s ease;
+        }
+
+        .section { display: none; animation: fadeIn 0.6s ease; }
+        .active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        h1 { color: var(--primary-red); font-size: 2.5rem; margin-top: 0; }
+
+        /* --- SLIDER (HOME) --- */
+        .slider-container {
+            width: 100%;
+            height: 400px;
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .slider-track { display: flex; transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1); height: 100%; }
+        .slider-track img { width: 100%; height: 100%; object-fit: cover; flex-shrink: 0; }
+
+        /* --- GIFTS (ALIVE) --- */
+        .gift-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .gift-box {
+            background: var(--white);
+            padding: 40px 20px;
+            border-radius: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border: 2px dashed #ffcaca;
+        }
+
+        .gift-box:hover { transform: translateY(-10px) rotate(2deg); border-style: solid; }
+        .gift-box .icon { font-size: 60px; display: block; margin-bottom: 10px; }
+        .gift-text { display: none; font-weight: bold; color: var(--primary-red); font-size: 1.2rem; }
+
+        /* --- GALLERY (RESIZED) --- */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .gallery-grid img {
+            width: 100%;
+            height: 250px; 
+            object-fit: cover; 
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: 0.3s;
+        }
+
+        .gallery-grid img:hover { transform: scale(1.03); filter: brightness(1.05); }
+
+        /* --- MUSIC & HEARTS --- */
+        .music-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 24px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 2000;
+        }
+
+        .heart {
+            position: fixed;
+            color: rgba(198, 61, 61, 0.2);
+            pointer-events: none;
+            z-index: -1;
+            font-size: 20px;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) rotate(0); opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* --- RESPONSIVE DESIGN (MOBILE) --- */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 15px 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            }
+
+            .sidebar h2 { margin-bottom: 10px; font-size: 22px; text-align: center; }
+            .sidebar br { display: none; }
+
+            .sidebar nav {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 5px;
+            }
+
+            .sidebar a {
+                border-bottom: none;
+                padding: 8px 12px;
+                font-size: 0.95rem;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 20px;
+                width: auto;
+            }
+
+            .slider-container { height: 250px; }
+            
+            .gift-container { grid-template-columns: 1fr 1fr; }
+            .gallery-grid { grid-template-columns: 1fr 1fr; }
+            .gallery-grid img { height: 160px; }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="loveSong" loop>
+        <source src="https://www.bensound.com/bensound-music/bensound-love.mp3" type="audio/mpeg">
+    </audio>
+
+    <button class="music-btn" onclick="toggleMusic()" id="mBtn">🎵</button>
+
+    <div class="sidebar">
+        <h2>Happy Valentine's</h2>
+        <nav>
+            <a onclick="show('home')">Home</a>
+            <a onclick="show('wish')">Wish</a>
+            <a onclick="show('love')">Love</a>
+            <a onclick="show('gift')">Gifts</a>
+            <a onclick="show('gallery')">Gallery</a> <br> <br> <br> <br>
+            <h2>Developed By Denis</h2>
+        </nav>
+    </div>
+
+<!-----home section--------->
+
+    <div class="main">
+        <div id="home" class="section active">
+            <h1>My Valentine</h1>
+            <div class="slider-container">
+                <div class="slider-track" id="track">
+                    <img src="imagess.png" alt="Love 1">
+                    <img src="Valentines-Photoshoot-Ideas-26-768x512.jpg" alt="Love 2">
+                    <img src="cedd56f2-695f-42d6-88bd-b05c9c4a13bb.avif" alt="Love 3">
+                </div>
+            </div>
+            <div style="background:white; padding: 25px; border-radius: 20px; text-align: center;">
+                <p style="font-size: 1.2rem; color: #555;">"Every moment spent with you is a moment I treasure forever."</p>
+            </div>
+        </div>
+
+<!----wish section-------->
+        <div id="wish" class="section">
+            <h1>My Wish For You</h1>
+            <div style="background: white; padding: 40px; border-radius: 20px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+                <p style="font-size: 1.4rem; font-style: italic; line-height: 1.8; color: #444;">
+                    "I wish for your heart to always be as happy as you make mine. May your day be filled with all the love and sweetness you bring into the world."
+                </p>
+                <span style="color:var(--primary-red); font-size: 30px;">🌹</span>
+            </div>
+            <div style="background: white; padding: 40px; border-radius: 20px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+                <p style="font-size: 1.4rem; font-style: italic; line-height: 1.8; color: #444;">
+                    "I wish you could just lend me your voice,promise not to roar with.I like it."
+                </p>
+                <span style="color:var(--primary-red); font-size: 30px;">🌹</span>
+            </div>
+            <div style="background: white; padding: 40px; border-radius: 20px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+                <p style="font-size: 1.4rem; font-style: italic; line-height: 1.8; color: #444;">
+                    "I wish you could just smile for me 😘,your smile makes me  happy."
+                </p>
+                <span style="color:var(--primary-red); font-size: 30px;">🌹</span>
+            </div>
+        </div>
+
+<!----love section-------->
+        <div id="love" class="section">
+            <h1>Why I Love You</h1>
+            <div class="gift-container">
+                <div class="gift-box" style="cursor: default;">
+                    <span class="icon">✨</span>
+                    <p>The way your eyes light up when you're happy.</p>
+                </div>
+                <div class="gift-box" style="cursor: default;">
+                    <span class="icon">🤝</span>
+                    <p>How you always know exactly what to say to make me feel better.</p>
+                </div>
+                <div class="gift-box" style="cursor: default;">
+                    <span class="icon">🏠</span>
+                    <p>Because you feel like home, no matter where we are.</p>
+                </div>
+                <div class="gift-box" style="cursor: default;">
+                    <span class="icon">🏠</span>
+                    <p>Because you make feel i have conquered the world.</p>
+                </div>
+            </div>
+        </div>
+
+<!----gift section-------->
+        <div id="gift" class="section">
+            <h1>Tap to Open Your Gifts</h1>
+            <div class="gift-container">
+                <div class="gift-box" onclick="reveal(this)">
+                    <span class="icon">🎁</span>
+                    <span class="gift-text">Romantic Dinner 🍷</span>
+                </div>
+                <div class="gift-box" onclick="reveal(this)">
+                    <span class="icon">🎁</span>
+                    <span class="gift-text">Endless Hugs 🤗</span>
+                </div>
+                <div class="gift-box" onclick="reveal(this)">
+                    <span class="icon">🎁</span>
+                    <span class="gift-text">Midnight Walk 🌙</span>
+                </div>
+                <div class="gift-box" onclick="reveal(this)">
+                    <span class="icon">🎁</span>
+                    <span class="gift-text">A Long Kiss 💋</span>
+                </div>
+                 <div class="gift-box" onclick="reveal(this)">
+                    <span class="icon">🎁</span>
+                    <span class="gift-text">💕💕</span>
+                </div>
+            </div>
+        </div>
+
+<!----gallery section-------->
+        <div id="gallery" class="section">
+            <h1>Our Gallery</h1>
+
+            <!-- Add Image Button -->
+            <div style="margin-bottom: 20px; text-align: center;">
+                <input type="file" id="imageInput" accept="image/*" style="display:none" />
+                <button onclick="document.getElementById('imageInput').click();" 
+                        style="padding: 10px 20px; font-size: 1rem; border-radius: 10px; background: var(--primary-red); color: white; border: none; cursor: pointer;">
+                    Add Image
+                </button>
+            </div>
+
+            <div class="gallery-grid">
+                <img src="Snapchat-1599580345.jpg">
+                <img src="Valentines-Photoshoot-Ideas-26-768x512.jpg">
+                <img src="cedd56f2-695f-42d6-88bd-b05c9c4a13bb.avif">
+                <img src="images (2).jpeg">
+                <img src="IMG-20260111-WA0027.jpg">
+                <img src="1770319725235.png">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab Navigation
+        function show(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            window.scrollTo(0, 0); // Reset scroll position
+        }
+
+        // Gift Reveal
+        function reveal(el) {
+            const icon = el.querySelector('.icon');
+            const text = el.querySelector('.gift-text');
+            icon.style.display = 'none';
+            text.style.display = 'block';
+            el.style.background = '#fff0f0';
+            el.style.transform = 'scale(1.1)';
+            el.style.borderColor = 'var(--primary-red)';
+        }
+
+        // Music Toggle
+        const audio = document.getElementById('loveSong');
+        const mBtn = document.getElementById('mBtn');
+        function toggleMusic() {
+            if (audio.paused) {
+                audio.play();
+                mBtn.innerText = "⏸";
+            } else {
+                audio.pause();
+                mBtn.innerText = "🎵";
+            }
+        }
+
+        // Auto Image Slider
+        let currentImg = 0;
+        const totalImg = 3;
+        setInterval(() => {
+            const track = document.getElementById('track');
+            currentImg = (currentImg + 1) % totalImg;
+            track.style.transform = `translateX(-${currentImg * 100}%)`;
+        }, 3500);
+
+        // Heart Generator
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.innerHTML = "❤";
+            heart.className = "heart";
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animation = `floatUp ${Math.random() * 2 + 4}s linear forwards`;
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 6000);
+        }
+        setInterval(createHeart, 800);
+
+        // Add Image to Gallery
+        const imageInput = document.getElementById('imageInput');
+        const gallery = document.querySelector('.gallery-grid');
+
+        imageInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    gallery.appendChild(img);
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>
